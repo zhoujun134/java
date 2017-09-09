@@ -14,7 +14,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="hadoop" target="1.5" />
+      <module name="hadoop" target="1.8" />
       <module name="hbase" target="1.8" />
       <module name="java" target="1.5" />
       <module name="java8" target="1.8" />
