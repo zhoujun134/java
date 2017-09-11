@@ -1,5 +1,6 @@
 package com.connect;
 
+import com.utils.HBaseUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -24,12 +25,12 @@ public class HbaseConnection {
     /**
      * HBase位置
      */
-    private static final String HBASE_POS = "192.168.27.132";
+    private static final String HBASE_POS = "localhost";
 
     /**
      * ZooKeeper位置
      */
-    private static final String ZK_POS = "192.168.27.132";
+    private static final String ZK_POS = "localhost";
 
     /**
      * zookeeper服务端口
@@ -135,9 +136,12 @@ public class HbaseConnection {
 
     public static void main(String[] args) throws Exception {
 //        System.out.println(createTable("learmTest","f1"));
-        System.out.println("***************插入一条数据：");
-        putDataH("learmTest","test1","f1","age","4545");
-        System.out.println("****************打印表中的数据：");
-        getValueByTable("learmTest");
+//        System.out.println("***************插入一条数据：");
+//        putDataH("learmTest","test1","f1","age","4545");
+//        System.out.println("****************打印表中的数据：");
+//        getValueByTable("learmTest");
+
+        HBaseUtils.getTestDate("learmTest");
+
     }
 }
