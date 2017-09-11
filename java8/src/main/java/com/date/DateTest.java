@@ -146,6 +146,6 @@ public class DateTest {
     }
 
     public static void log(Object msg){
-        System.out.println(" 信息: "+ msg.getClass() + "  ::: " +  msg);
+        System.out.println(" 信息: "+ msg.getClass() + "  :::" +  msg);
     }
 }
