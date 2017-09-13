@@ -25,12 +25,12 @@ public class HbaseConnection {
     /**
      * HBase位置
      */
-    private static final String HBASE_POS = "localhost";
+    private static final String HBASE_POS = "192.168.27.132";
 
     /**
      * ZooKeeper位置
      */
-    private static final String ZK_POS = "localhost";
+    private static final String ZK_POS = "192.168.27.132";
 
     /**
      * zookeeper服务端口
@@ -135,13 +135,13 @@ public class HbaseConnection {
     }
 
     public static void main(String[] args) throws Exception {
-//        System.out.println(createTable("learmTest","f1"));
+        System.out.println(createTable("testtable","data"));
 //        System.out.println("***************插入一条数据：");
 //        putDataH("learmTest","test1","f1","age","4545");
 //        System.out.println("****************打印表中的数据：");
 //        getValueByTable("learmTest");
 
-        HBaseUtils.getTestDate("learmTest");
+//        HBaseUtils.getTestDate("learmTest");
 
     }
 }
