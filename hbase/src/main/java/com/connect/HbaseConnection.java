@@ -2,20 +2,24 @@ package com.connect;
 
 import com.utils.HBaseUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.HColumnDescriptor;
-import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.htrace.commons.logging.Log;
+import org.apache.htrace.commons.logging.LogFactory;
+import org.apache.htrace.commons.logging.impl.Jdk14Logger;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Created by zhoujun on 2017/9/9.
  */
 public class HbaseConnection {
+
+    private static Log log = LogFactory.getFactory().getInstance("log");
     /**
      * 连接池对象
      */
@@ -36,13 +40,13 @@ public class HbaseConnection {
      * zookeeper服务端口
      */
     private final static String ZK_PORT_VALUE = "2181";
+    private static final  Configuration configuration = HBaseConfiguration.create();
 
     /**
      * 静态构造，在调用静态方法时前进行运行
      * 初始化连接对象．
      * */
     static{
-        Configuration configuration = HBaseConfiguration.create();
         configuration.set("hbase.rootdir", "hdfs://" + HBASE_POS
                 + ":9000/hbase");
         configuration.set(ZK_QUORUM, ZK_POS);
@@ -135,7 +139,10 @@ public class HbaseConnection {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(createTable("testtable","data"));
+//        System.out.println(createTable("testtable","data"));
+//        createTableBySplitKeys("testhbase", Arrays.asList("f"));
+        HTable table = new HTable(configuration, "testhbase");
+        table.put(batchPut());
 //        System.out.println("***************插入一条数据：");
 //        putDataH("learmTest","test1","f1","age","4545");
 //        System.out.println("****************打印表中的数据：");
@@ -143,5 +150,83 @@ public class HbaseConnection {
 
 //        HBaseUtils.getTestDate("learmTest");
 
+    }
+    private static List<Put> batchPut(){
+        List<Put> list = new ArrayList<Put>();
+        for(int i=1; i <= 10000; i++){
+            byte[] rowkey = Bytes.toBytes(getRandomNumber() +"-"+System.currentTimeMillis()+"-"+i);
+            Put put = new Put(rowkey);
+            put.add(Bytes.toBytes("f"), Bytes.toBytes("name"), Bytes.toBytes("zs"+i));
+            list.add(put);
+        }
+        return list;
+    }
+    private static String getRandomNumber(){
+        String ranStr = Math.random()+"";
+        int pointIndex = ranStr.indexOf(".");
+        return ranStr.substring(pointIndex+1, pointIndex+3);
+    }
+
+    private static byte[][] getSplitKeys() {
+        String[] keys = new String[] { "10|", "20|", "30|", "40|", "50|",
+                "60|", "70|", "80|", "90|" };
+        byte[][] splitKeys = new byte[keys.length][];
+        TreeSet<byte[]> rows = new TreeSet<byte[]>(Bytes.BYTES_COMPARATOR);//升序排序
+        for (int i = 0; i < keys.length; i++) {
+            rows.add(Bytes.toBytes(keys[i]));
+        }
+        Iterator<byte[]> rowKeyIter = rows.iterator();
+        int i=0;
+        while (rowKeyIter.hasNext()) {
+            byte[] tempRow = rowKeyIter.next();
+            rowKeyIter.remove();
+            splitKeys[i] = tempRow;
+            i++;
+        }
+        return splitKeys;
+    }
+
+    /**
+     * 创建预分区hbase表
+     * @param tableName 表名
+     * @param columnFamily 列簇
+     * @return
+     */
+    @SuppressWarnings("resource")
+    public static boolean createTableBySplitKeys(String tableName, List<String> columnFamily) {
+        try {
+            if (StringUtils.isBlank(tableName) || columnFamily == null
+                    || columnFamily.size() < 0) {
+                log.error("===Parameters tableName|columnFamily should not be null,Please check!===");
+            }
+            HBaseAdmin admin = new HBaseAdmin(configuration);
+            if (admin.tableExists(tableName)) {
+                return true;
+            } else {
+                HTableDescriptor tableDescriptor = new HTableDescriptor(
+                        TableName.valueOf(tableName));
+                for (String cf : columnFamily) {
+                    tableDescriptor.addFamily(new HColumnDescriptor(cf));
+                }
+                byte[][] splitKeys = getSplitKeys();
+                admin.createTable(tableDescriptor, splitKeys);//指定splitkeys
+                log.info("===Create Table " + tableName
+                        + " Success!columnFamily:" + columnFamily.toString()
+                        + "===");
+            }
+        } catch (MasterNotRunningException e) {
+            // TODO Auto-generated catch block
+            log.error(e);
+            return false;
+        } catch (ZooKeeperConnectionException e) {
+            // TODO Auto-generated catch block
+            log.error(e);
+            return false;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            log.error(e);
+            return false;
+        }
+        return true;
     }
 }
