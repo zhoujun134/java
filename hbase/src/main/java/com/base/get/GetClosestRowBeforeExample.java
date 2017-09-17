@@ -1,7 +1,5 @@
 package com.base.get;
 
-// cc GetClosestRowBeforeExample Retrieves a row close to the requested, if necessary
-
 import com.utils.HBaseHelper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.CellScanner;
@@ -18,6 +16,9 @@ public class GetClosestRowBeforeExample {
 
   public static void main(String[] args) throws IOException {
     Configuration conf = HBaseConfiguration.create();
+    conf.set(HBaseHelper.ZK_CLIENT_PORT_KEY,HBaseHelper.getZkPortValue());
+    conf.set(HBaseHelper.ZK_QUORUM_KEY, HBaseHelper.getZkValue());
+    conf.set(HBaseHelper.HBASE_KEY, HBaseHelper.getHbaseValue());
 
     HBaseHelper helper = HBaseHelper.getHelper(conf);
     helper.dropTable("testtable");
@@ -41,8 +42,7 @@ public class GetClosestRowBeforeExample {
     puts.add(put3);
     table.put(puts);
 
-    // vv GetClosestRowBeforeExample
-    Get get1 = new Get(Bytes.toBytes("row3")); // co GetClosestRowBeforeExample-1-Get1 Attempt to read a row that does not exist.
+    Get get1 = new Get(Bytes.toBytes("row3"));
     get1.addColumn(Bytes.toBytes("colfam1"), Bytes.toBytes("qual1"));
     Result result1 = table.get(get1);
 
@@ -54,7 +54,7 @@ public class GetClosestRowBeforeExample {
 
     Get get2 = new Get(Bytes.toBytes("row3"));
     get2.addColumn(Bytes.toBytes("colfam1"), Bytes.toBytes("qual1"));
-    get2.setClosestRowBefore(true); // co GetClosestRowBeforeExample-2-Get2 Instruct the get() call to fall back to the previous row, if necessary.
+    get2.setClosestRowBefore(true);
     Result result2 = table.get(get2);
 
     System.out.println("Get 2 isEmpty: " + result2.isEmpty());
@@ -63,7 +63,7 @@ public class GetClosestRowBeforeExample {
       System.out.println("Get 2 Cell: " + scanner2.current());
     }
 
-    Get get3 = new Get(Bytes.toBytes("row2")); // co GetClosestRowBeforeExample-3-Get3 Attempt to read a row that exists.
+    Get get3 = new Get(Bytes.toBytes("row2"));
     get3.addColumn(Bytes.toBytes("colfam1"), Bytes.toBytes("qual1"));
     get3.setClosestRowBefore(true);
     Result result3 = table.get(get3);
@@ -74,7 +74,7 @@ public class GetClosestRowBeforeExample {
       System.out.println("Get 3 Cell: " + scanner3.current());
     }
 
-    Get get4 = new Get(Bytes.toBytes("row2")); // co GetClosestRowBeforeExample-4-Get4 Read exactly a row that exists.
+    Get get4 = new Get(Bytes.toBytes("row2"));
     get4.addColumn(Bytes.toBytes("colfam1"), Bytes.toBytes("qual1"));
     Result result4 = table.get(get4);
 
@@ -84,7 +84,6 @@ public class GetClosestRowBeforeExample {
       System.out.println("Get 4 Cell: " + scanner4.current());
     }
 
-    // ^^ GetClosestRowBeforeExample
     table.close();
     connection.close();
     helper.close();

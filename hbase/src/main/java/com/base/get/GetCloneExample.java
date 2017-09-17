@@ -1,7 +1,5 @@
 package com.base.get;
 
-// cc GetCloneExample Example application retrieving data from HBase
-
 import com.utils.HBaseHelper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -15,6 +13,9 @@ public class GetCloneExample {
 
   public static void main(String[] args) throws IOException {
     Configuration conf = HBaseConfiguration.create();
+    conf.set(HBaseHelper.ZK_CLIENT_PORT_KEY,HBaseHelper.getZkPortValue());
+    conf.set(HBaseHelper.ZK_QUORUM_KEY, HBaseHelper.getZkValue());
+    conf.set(HBaseHelper.HBASE_KEY, HBaseHelper.getHbaseValue());
 
     HBaseHelper helper = HBaseHelper.getHelper(conf);
     if (!helper.existsTable("testtable")) {
@@ -23,7 +24,6 @@ public class GetCloneExample {
     Connection connection = ConnectionFactory.createConnection(conf);
     Table table = connection.getTable(TableName.valueOf("testtable"));
 
-    // vv GetCloneExample
     Get get1 = new Get(Bytes.toBytes("row1"));
     get1.addColumn(Bytes.toBytes("colfam1"), Bytes.toBytes("qual1"));
 
@@ -31,7 +31,7 @@ public class GetCloneExample {
     Result result = table.get(get2);
 
     System.out.println("Result : " + result);
-    // ^^ GetCloneExample
+
     table.close();
     connection.close();
     helper.close();
