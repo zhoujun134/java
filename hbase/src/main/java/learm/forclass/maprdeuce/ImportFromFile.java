@@ -1,4 +1,4 @@
-package com.maprdeuce;
+package learm.forclass.maprdeuce;
 
 import org.apache.commons.cli.*;
 import org.apache.commons.codec.digest.DigestUtils;

@@ -1,6 +1,5 @@
-package com.connect;
+package learm.forclass.connection;
 
-import com.utils.HBaseUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -9,7 +8,6 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.htrace.commons.logging.Log;
 import org.apache.htrace.commons.logging.LogFactory;
-import org.apache.htrace.commons.logging.impl.Jdk14Logger;
 
 import java.io.IOException;
 import java.util.*;
@@ -29,12 +27,12 @@ public class HbaseConnection {
     /**
      * HBase位置
      */
-    private static final String HBASE_POS = "192.168.27.132";
+    private static final String HBASE_POS = "192.168.23.128";
 
     /**
      * ZooKeeper位置
      */
-    private static final String ZK_POS = "192.168.27.132";
+    private static final String ZK_POS = "192.168.23.128";
 
     /**
      * zookeeper服务端口
@@ -140,7 +138,7 @@ public class HbaseConnection {
 
     public static void main(String[] args) throws Exception {
 //        System.out.println(createTable("testtable","data"));
-//        createTableBySplitKeys("testhbase", Arrays.asList("f"));
+        createTableBySplitKeys("testhbase", Arrays.asList("f"));
         HTable table = new HTable(configuration, "testhbase");
         table.put(batchPut());
 //        System.out.println("***************插入一条数据：");
