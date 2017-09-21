@@ -11,19 +11,20 @@ import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.TreeSet;
 
 /**
- * Created by zhoujun on 2017/9/18.
+ * Created by zhoujun on 2017/9/21.
+ * 实验 二
  */
 public class MainHT {
 
+    /**
+     * 连接配置信息
+     */
     private static Configuration conf = null;
 
     /**
-     * 初始化配置信息
+     * 情态代码块，初始化配置信息，static 中的代码会在 main 方法调用之前执行
      */
     static {
         conf = HBaseConfiguration.create();// 初始化配置信息
@@ -33,14 +34,6 @@ public class MainHT {
 //                + ":9000/hbase");                                // 设置 hbase 的 master 集群地址
     }
 
-
-    /**
-     * 内部工具类，打印日志信息
-     * @param msg 日志信息
-     */
-    private static void log(Object msg){
-        System.out.println("info： " + msg);
-    }
 
     public static void main(String[] args) throws InterruptedException {
         log("**************  主方法调试 ******************");
@@ -310,5 +303,13 @@ public class MainHT {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 内部工具类，打印日志信息
+     * @param msg 日志信息
+     */
+    private static void log(Object msg){
+        System.out.println("info： " + msg);
     }
 }
