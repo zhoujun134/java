@@ -213,15 +213,12 @@ public class HbaseConnection {
                         + "===");
             }
         } catch (MasterNotRunningException e) {
-            // TODO Auto-generated catch block
             log.error(e);
             return false;
         } catch (ZooKeeperConnectionException e) {
-            // TODO Auto-generated catch block
             log.error(e);
             return false;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             log.error(e);
             return false;
         }
