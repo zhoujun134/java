@@ -1,6 +1,5 @@
 package com.base.batch;
 
-// cc BatchCallbackExample Example application using batch operations with callbacks
 
 import com.utils.HBaseHelper;
 import org.apache.hadoop.conf.Configuration;
@@ -14,6 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 运用批量操作，batch
+ */
 public class BatchCallbackExample {
 
     private final static byte[] ROW1 = Bytes.toBytes("row1");
@@ -44,19 +46,18 @@ public class BatchCallbackExample {
     Connection connection = ConnectionFactory.createConnection(conf);
     Table table = connection.getTable(TableName.valueOf("testtable"));
 
-    // vv BatchCallbackExample
-    List<Row> batch = new ArrayList<Row>(); // co BatchCallbackExample-2-CreateList Create a list to hold all values.
+    List<Row> batch = new ArrayList<Row>();
 
     Put put = new Put(ROW2);
-    put.addColumn(COLFAM2, QUAL1, 4, Bytes.toBytes("val5")); // co BatchCallbackExample-3-AddPut Add a Put instance.
-    batch.add(put);
+    put.addColumn(COLFAM2, QUAL1, 4, Bytes.toBytes("val5"));
+    batch.add(put); // 添加一个put实例
 
     Get get1 = new Get(ROW1);
-    get1.addColumn(COLFAM1, QUAL1); // co BatchCallbackExample-4-AddGet Add a Get instance for a different row.
+    get1.addColumn(COLFAM1, QUAL1); // 添加一个get实例
     batch.add(get1);
 
     Delete delete = new Delete(ROW1);
-    delete.addColumns(COLFAM1, QUAL2); // co BatchCallbackExample-5-AddDelete Add a Delete instance.
+    delete.addColumns(COLFAM1, QUAL2); // 添加一个delete实例
     batch.add(delete);
 
     Get get2 = new Get(ROW2);
@@ -73,7 +74,7 @@ public class BatchCallbackExample {
         }
       });
     } catch (Exception e) {
-      System.err.println("Error: " + e); // co BatchCallbackExample-8-Print Print error that was caught.
+      System.err.println("Error: " + e);
     }
 
     for (int i = 0; i < results.length; i++) {
