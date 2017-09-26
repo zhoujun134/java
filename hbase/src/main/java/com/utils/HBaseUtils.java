@@ -27,12 +27,12 @@ public class HBaseUtils {
     /**
      * HBase位置
      */
-    private static final String HBASE_POS = "localhost";
+    private static final String HBASE_POS = "192.168.23.133";
 
     /**
      * ZooKeeper位置
      */
-    private static final String ZK_POS = "localhost";
+    private static final String ZK_POS = "192.168.23.133";
 
     /**
      * zookeeper服务端口
@@ -63,7 +63,7 @@ public class HBaseUtils {
      * @param seriesStr
      *            以字符串的形式指定表的列族，每个列族以逗号的形式隔开,(例如：＂f1,f2＂两个列族，分别为f1和f2)
      **/
-    public boolean createTable(String tableName, String seriesStr) {
+    public static boolean createTable(String tableName, String seriesStr) {
         boolean isSuccess = false;// 判断是否创建成功！初始值为false
         Admin admin = null;
         TableName table = TableName.valueOf(tableName);
@@ -94,7 +94,7 @@ public class HBaseUtils {
      * @param tableName 　表名
      * @throws IOException
      * */
-    public boolean dropTable(String tableName) throws IOException {
+    public static boolean dropTable(String tableName) throws IOException {
         boolean isSuccess = false;// 判断是否创建成功！初始值为false
         Admin admin = null;
         TableName table = TableName.valueOf(tableName);

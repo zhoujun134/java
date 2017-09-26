@@ -16,10 +16,10 @@ import java.io.IOException;
 public class PutExample {
 
   public static void main(String[] args) throws IOException {
+    /**
+     * 创建连接配置对象
+     */
     Configuration conf = HBaseConfiguration.create();
-    conf.set(HBaseHelper.ZK_CLIENT_PORT_KEY,HBaseHelper.getZkPortValue());
-    conf.set(HBaseHelper.ZK_QUORUM_KEY, HBaseHelper.getZkValue());
-    conf.set(HBaseHelper.HBASE_KEY, HBaseHelper.getHbaseValue());
 
     HBaseHelper helper = HBaseHelper.getHelper(conf);
     helper.dropTable("testtable");
@@ -34,7 +34,10 @@ public class PutExample {
     put.addColumn(Bytes.toBytes("colfam1"), Bytes.toBytes("qual2"),
       Bytes.toBytes("val2"));
 
+    //插入数据
     table.put(put);
+
+
     table.close();
     connection.close();
     helper.close();
