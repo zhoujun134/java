@@ -7,10 +7,7 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class HBaseUtils {
 
@@ -105,5 +102,19 @@ public class HBaseUtils {
             IOUtils.closeQuietly(admin);
         }
         return isSuccess;
+    }
+
+    /**
+     * 获取一张表的实例
+     * @param tableName 表名
+     * @return
+     */
+    public static Table getTable(String tableName){
+        try {
+            return connection.getTable(TableName.valueOf(tableName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

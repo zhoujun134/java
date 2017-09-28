@@ -84,7 +84,7 @@ public class GetFile_Statistics extends Configured implements Tool {
 	public static void init() throws Exception{
 		conf = new Configuration();
 		conf.set("fs.defaultFS", "hdfs://localhost:9000/");
-		 fs = FileSystem.get(new URI("hdfs://localhost:9000/"),conf,"hadoop");
+		fs = FileSystem.get(new URI("hdfs://localhost:9000/"),conf,"hadoop");
 	}
 	
 	public int run(String[] args) throws Exception {

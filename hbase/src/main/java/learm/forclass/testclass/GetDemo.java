@@ -20,7 +20,6 @@ public class GetDemo {
             byte[] value = result.getValue(Bytes.toBytes("cf2"), Bytes.toBytes("name"));
             System.out.println(" r1: cf1:namme:    value = " +Bytes.toString(value));
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
