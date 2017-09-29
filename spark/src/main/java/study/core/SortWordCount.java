@@ -32,40 +32,28 @@ public class SortWordCount {
 		
 		// 执行我们之前做过的单词计数
 		JavaRDD<String> words = lines.flatMap(new FlatMapFunction<String, String>() {
-
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public Iterator<String> call(String t) throws Exception {
 				return Arrays.asList(t.split(" ")).iterator();
 			}
-			
 		});
 		
 		JavaPairRDD<String, Integer> pairs = words.mapToPair(
-				
 				new PairFunction<String, String, Integer>() {
-
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public Tuple2<String, Integer> call(String t) throws Exception {
 						return new Tuple2<String, Integer>(t, 1);
 					}
-					
 				});
-		
 		JavaPairRDD<String, Integer> wordCounts = pairs.reduceByKey(
-				
 				new Function2<Integer, Integer, Integer>() {
-
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public Integer call(Integer v1, Integer v2) throws Exception {
 						return v1 + v2;
 					}
-					
 				});
 		
 		// 到这里为止，就得到了每个单词出现的次数

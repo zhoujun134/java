@@ -1,5 +1,6 @@
 package com.classstudy;
 
+import org.apache.spark.HashPartitioner;
 import org.apache.spark.Partitioner;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -115,18 +116,8 @@ public class SparkDemo {
                 return new Tuple2<Integer, Integer>(integer, 1);
             }
         });
-        pairRDD.reduceByKey(new Partitioner() {
-            @Override
-            public int getPartition(Object key) {
-                System.out.println("获取分区数量：" + key);
-                return 0;
-            }
-
-            @Override
-            public int numPartitions() {
-                return 2;
-            }
-        }, new Function2<Integer, Integer, Integer>() {
+        System.out.println("分区数： " + pairRDD.getNumPartitions());
+        pairRDD.reduceByKey(new HashPartitioner(2), new Function2<Integer, Integer, Integer>() {
             @Override
             public Integer call(Integer v1, Integer v2) throws Exception {
                 return v1+v2;
