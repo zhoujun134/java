@@ -45,10 +45,10 @@ public class HBaseUtils {
      * */
     static{
         Configuration configuration = HBaseConfiguration.create();
-        configuration.set("hbase.rootdir", "hdfs://" + HBASE_POS
-                + ":9000/hbase");
-        configuration.set(ZK_QUORUM, ZK_POS);
-        configuration.set(ZK_CLIENT_PORT, ZK_PORT_VALUE);
+//        configuration.set("hbase.rootdir", "hdfs://" + HBASE_POS
+//                + ":9000/hbase");
+//        configuration.set(ZK_QUORUM, ZK_POS);
+//        configuration.set(ZK_CLIENT_PORT, ZK_PORT_VALUE);
         try {
             connection = ConnectionFactory.createConnection(configuration);
         } catch (IOException e) {
