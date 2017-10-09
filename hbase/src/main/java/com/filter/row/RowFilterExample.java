@@ -25,7 +25,7 @@ public class RowFilterExample {
     helper.dropTable("testtable");
     //创建表
     helper.createTable("testtable", "colfam1", "colfam2");
-    System.out.println("Adding rows to table...");
+    System.out.println("向表中添加数据...");
     //向表填充数据
     helper.fillTable("testtable", 1, 100, 100, "colfam1", "colfam2");
 

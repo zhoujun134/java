@@ -35,13 +35,13 @@ public class HBaseHelper implements Closeable {
      * HBase 位置 value
      * 默认值是：192.168.27.132:9000 下的 hbase 数据库
      */
-    private static String HBASE_VALUE = "hdfs://192.168.23.128:9000/hbase";
+    private static String HBASE_VALUE = "hdfs://192.168.1.104:9000/hbase";
 
     /**
      * ZooKeeper 位置 value
      * 默认值是：192.168.27.132
      */
-    private static String ZK_VALUE = "192.168.23.128";
+    private static String ZK_VALUE = "192.168.1.104";
 
     /**
      * zookeeper 服务端口 value
