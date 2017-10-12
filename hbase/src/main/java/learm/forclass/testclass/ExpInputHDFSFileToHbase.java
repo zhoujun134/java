@@ -13,7 +13,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
+/**
+ * Created by zhoujun on 2017/9/28.
+ * 实验 三
+ */
 public class ExpInputHDFSFileToHbase {
     private static Configuration hconf = HBaseConfiguration.create();
 
@@ -77,7 +80,7 @@ public class ExpInputHDFSFileToHbase {
             String line = "";
             while ((line=br.readLine())!=null) {
                 String[] data = line.split(" ");
-                if(data.length >= 4 && ( data[2].equals("WARN") )
+                if(data.length >= 4 && ( data[2].equals("INFO") || data[2].equals("WARN") || data[2].equals("ERROR")|| data[2].equals("FATAL") )
                         && data[0].length()<= 10 ){
                     System.out.println(convert(data));
                     result.add(line);
