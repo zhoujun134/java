@@ -20,12 +20,12 @@ public class HBaseUtils {
     /**
      * HBase位置
      */
-    private static final String HBASE_POS = "192.168.23.133";
+    private static final String HBASE_POS = "zhoujun";
 
     /**
      * ZooKeeper位置
      */
-    private static final String ZK_POS = "192.168.23.133";
+    private static final String ZK_POS = "zhoujun";
 
     /**
      * zookeeper服务端口
@@ -117,4 +117,39 @@ public class HBaseUtils {
         }
         return null;
     }
+
+    /**
+     * 向指定表中插入数据
+     *
+     * @param tableName
+     *            要插入数据的表名
+     * @param rowkey
+     *            指定要插入数据的表的行键
+     * @param family
+     *            指定要插入数据的表的列族family
+     * @param qualifier
+     *            要插入数据的qualifier
+     * @param value
+     *            要插入数据的值value
+     * */
+    public static  void putDataH(String tableName, String rowkey, String family,
+                                 String qualifier, Object value) throws IOException {
+        Admin admin = null;
+        TableName tN = TableName.valueOf(tableName);
+        admin = connection.getAdmin();
+        if (admin.tableExists(tN)){
+            try (Table table = connection.getTable(TableName.valueOf(tableName
+                    .getBytes()))) {
+                Put put = new Put(rowkey.getBytes());
+                put.addColumn(family.getBytes(), qualifier.getBytes(),
+                        value.toString().getBytes());
+                table.put(put);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("插入数据的表不存在，请指定正确的tableName ! ");
+        }
+    }
+
 }

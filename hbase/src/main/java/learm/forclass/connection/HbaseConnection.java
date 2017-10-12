@@ -56,64 +56,64 @@ public class HbaseConnection {
         }// 创建连接池
     }
 
-    /**
-     * @param tableName 创建一个表 tableName 指定的表名
-     * @param seriesStr  以字符串的形式指定表的列族，每个列族以逗号的形式隔开,(例如：＂f1,f2＂两个列族，分别为f1和f2)
-     **/
-    public static boolean createTable(String tableName, String seriesStr) {
-        boolean isSuccess = false;// 判断是否创建成功！初始值为false
-        Admin admin = null;
-        TableName table = TableName.valueOf(tableName);
-        try {
-            admin = connection.getAdmin();
-            if (!admin.tableExists(table)) {
-                System.out.println("INFO:Hbase::  " + tableName + "原数据库中表不存在！开始创建...");
-                HTableDescriptor descriptor = new HTableDescriptor(table);
-                Arrays.asList(seriesStr.split(","))
-                        .forEach(s ->  descriptor.addFamily(new HColumnDescriptor(s.getBytes())));
-                admin.createTable(descriptor);
-                System.out.println("INFO:Hbase::  "+tableName + "新的" + tableName + "表创建成功！");
-                isSuccess = true;
-            } else {
-                System.out.println("INFO:Hbase::  该表已经存在，不需要在创建！");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(admin);
-        }
-        return isSuccess;
-    }
-
-    /**
-     * 插入数据
-     * @param tableName 表名
-     * @param rowkey 行健
-     * @param family 列族
-     * @param qualifier 列描述符
-     * @param value 值
-     * @throws IOException 异常信息
-     */
-    public static  void putDataH(String tableName, String rowkey, String family,
-                                 String qualifier, Object value) throws IOException {
-        Admin admin = null;
-        TableName tN = TableName.valueOf(tableName);
-        admin = connection.getAdmin();
-        if (admin.tableExists(tN)) {
-            try (Table table = connection.getTable(TableName.valueOf(tableName
-                    .getBytes()))) {
-                Put put = new Put(rowkey.getBytes());
-                put.addColumn(family.getBytes(), qualifier.getBytes(),
-                        value.toString().getBytes());
-                table.put(put);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("插入数据的表不存在，请指定正确的tableName ! ");
-        }
-    }
+//    /**
+//     * @param tableName 创建一个表 tableName 指定的表名
+//     * @param seriesStr  以字符串的形式指定表的列族，每个列族以逗号的形式隔开,(例如：＂f1,f2＂两个列族，分别为f1和f2)
+//     **/
+//    public static boolean createTable(String tableName, String seriesStr) {
+//        boolean isSuccess = false;// 判断是否创建成功！初始值为false
+//        Admin admin = null;
+//        TableName table = TableName.valueOf(tableName);
+//        try {
+//            admin = connection.getAdmin();
+//            if (!admin.tableExists(table)) {
+//                System.out.println("INFO:Hbase::  " + tableName + "原数据库中表不存在！开始创建...");
+//                HTableDescriptor descriptor = new HTableDescriptor(table);
+//                Arrays.asList(seriesStr.split(","))
+//                        .forEach(s ->  descriptor.addFamily(new HColumnDescriptor(s.getBytes())));
+//                admin.createTable(descriptor);
+//                System.out.println("INFO:Hbase::  "+tableName + "新的" + tableName + "表创建成功！");
+//                isSuccess = true;
+//            } else {
+//                System.out.println("INFO:Hbase::  该表已经存在，不需要在创建！");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            IOUtils.closeQuietly(admin);
+//        }
+//        return isSuccess;
+//    }
+//
+//    /**
+//     * 插入数据
+//     * @param tableName 表名
+//     * @param rowkey 行健
+//     * @param family 列族
+//     * @param qualifier 列描述符
+//     * @param value 值
+//     * @throws IOException 异常信息
+//     */
+//    public static  void putDataH(String tableName, String rowkey, String family,
+//                                 String qualifier, Object value) throws IOException {
+//        Admin admin = null;
+//        TableName tN = TableName.valueOf(tableName);
+//        admin = connection.getAdmin();
+//        if (admin.tableExists(tN)) {
+//            try (Table table = connection.getTable(TableName.valueOf(tableName
+//                    .getBytes()))) {
+//                Put put = new Put(rowkey.getBytes());
+//                put.addColumn(family.getBytes(), qualifier.getBytes(),
+//                        value.toString().getBytes());
+//                table.put(put);
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            System.out.println("插入数据的表不存在，请指定正确的tableName ! ");
+//        }
+//    }
 
     /**
      * 根据table查询表中的所有数据 无返回值，直接在控制台打印结果
