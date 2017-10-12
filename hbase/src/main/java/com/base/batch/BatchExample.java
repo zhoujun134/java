@@ -24,12 +24,8 @@ public class BatchExample {
 
   public static void main(String[] args) throws IOException, InterruptedException {
     Configuration conf = HBaseConfiguration.create();
-    conf.set(HBaseHelper.ZK_CLIENT_PORT_KEY,HBaseHelper.getZkPortValue());
-    conf.set(HBaseHelper.ZK_QUORUM_KEY, HBaseHelper.getZkValue());
-    conf.set(HBaseHelper.HBASE_KEY, HBaseHelper.getHbaseValue());
-
     HBaseHelper helper = HBaseHelper.getHelper(conf);
-    helper.dropTable("testtable");
+//    helper.dropTable("testtable");
     helper.createTable("testtable", "colfam1", "colfam2");
     helper.put("testtable",
       new String[] { "row1" },

@@ -36,7 +36,14 @@ public class TestClass {
                 CompareFilter.CompareOp.NOT_EQUAL,
                 new SubstringComparator("3"));
         Scan scan = new Scan();
-        scan.setFilter(filter);
+
+        FilterList filterList = new FilterList();
+        filterList.addFilter(filter);
+
+        PageFilter pageFilter = new PageFilter(5l);
+        filterList.addFilter(pageFilter);
+
+        scan.setFilter(filterList);
         ResultScanner scanner = table.getScanner(scan);
         scanner.forEach(result -> {
             for (Cell cell : result.rawCells()) {

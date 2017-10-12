@@ -31,11 +31,11 @@ public class ExpInputHDFSFileToHbase {
             Connection connection = ConnectionFactory.createConnection(hconf);
             Admin admin = connection.getAdmin();
             //创建表
-            HTableDescriptor ts = new HTableDescriptor(TableName.valueOf("fileHadoop"));
+            HTableDescriptor ts = new HTableDescriptor(TableName.valueOf("classtable"));
             ts.addFamily(new HColumnDescriptor("f"));
-            if(admin.tableExists(TableName.valueOf("fileHadoop"))) admin.createTable(ts);
+            if(!admin.tableExists(TableName.valueOf("classtable"))) admin.createTable(ts);
             //获取表的实例
-            table = connection.getTable(TableName.valueOf("fileHadoop"));
+            table = connection.getTable(TableName.valueOf("classtable"));
             ArrayList<Put> list1 = new ArrayList<Put>();
             for(String s: list){
                 String[] data = s.split(" ");
@@ -46,7 +46,7 @@ public class ExpInputHDFSFileToHbase {
                 put.addColumn(Bytes.toBytes("f"), Bytes.toBytes("level"),Bytes.toBytes(data[2]));
 
                 Put put2 = new Put(Bytes.toBytes(row));
-                put2.addColumn(Bytes.toBytes("f"), Bytes.toBytes("class"),Bytes.toBytes(data[3]));
+                put2.addColumn(Bytes.toBytes("f"), Bytes.toBytes("class"),Bytes.toBytes(data[5]));
 
                 list1.add(put);
                 list1.add(put2);
@@ -72,13 +72,12 @@ public class ExpInputHDFSFileToHbase {
     private static ArrayList<String> getDate(){
         ArrayList<String> result = new ArrayList<>();
         try {
-            FileReader fr=new FileReader("F:/hadoop-zhoujun-datanode-zhoujun.log");
+            FileReader fr=new FileReader("/opt/hbase/logs/hbase-zhoujun-master-zhoujun.log");
             BufferedReader br=new BufferedReader(fr);
             String line = "";
             while ((line=br.readLine())!=null) {
                 String[] data = line.split(" ");
-                if(data.length >= 4 && (data[2].equals("INFO") || data[2].equals("ERROR") ||
-                        data[2].equals("Total") ||data[2].equals("WARN"))
+                if(data.length >= 4 && ( data[2].equals("WARN") )
                         && data[0].length()<= 10 ){
                     System.out.println(convert(data));
                     result.add(line);
