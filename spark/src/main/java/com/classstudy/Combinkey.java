@@ -11,6 +11,7 @@ import scala.Tuple1;
 import scala.Tuple2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by zhoujun on 17-10-11.
@@ -73,14 +74,47 @@ public class Combinkey {
 
         JavaPairRDD<String, Tuple2<Integer, Integer>> results = rdd1.combineByKey(
                 v -> new Tuple2<Integer, Integer>(v ,1),
-                (vTup, vTupKey) -> new Tuple2<Integer, Integer>(vTup._1()+vTupKey, vTup._2()+1),
+                (vTup, vTupKey) -> new Tuple2<Integer, Integer>(vTup._1() + vTupKey, vTup._2() + 1),
                 (t1, t2) -> new Tuple2<Integer, Integer>(t1._1() + t2._1(),t1._2() + t2._2())
         );
         results.foreach(stringTuple2Tuple2 -> System.out.println(stringTuple2Tuple2));
 
+        JavaPairRDD<String, Tuple1<Integer>[]> results2 = rdd1.combineByKey(new Function<Integer, Tuple1<Integer>[]>() {
+            @Override
+            public Tuple1<Integer>[] call(Integer integer) throws Exception {
+                Tuple1[] tuple1s = new Tuple1[1];
+                tuple1s[0] = new Tuple1<Integer>(integer);
+                return tuple1s;
+            }
+        }, new Function2<Tuple1<Integer>[], Integer, Tuple1<Integer>[]>() {
+            @Override
+            public Tuple1<Integer>[] call(Tuple1<Integer>[] tuple1s, Integer integer) throws Exception {
+                Tuple1[] tuple1s1 = new Tuple1[tuple1s.length + 1];
+                for(int i=0; i< tuple1s.length; i++) {
+                    tuple1s1[i] = tuple1s[i];
+                }
+                tuple1s1[tuple1s.length] = new Tuple1<Integer>(integer);
+                return tuple1s1;
+            }
+        }, new Function2<Tuple1<Integer>[], Tuple1<Integer>[], Tuple1<Integer>[]>() {
+            @Override
+            public Tuple1<Integer>[] call(Tuple1<Integer>[] tuple1s, Tuple1<Integer>[] tuple1s2) throws Exception {
+                Tuple1[] result = new Tuple1[tuple1s.length+tuple1s2.length];
+                int flag = 0;
+                for(int i=0; i< tuple1s.length; i++){
+                    result[i] = tuple1s[i];
+                    flag = i;
+                }
+                for(int i=0; i<tuple1s2.length; i++){
+                    flag++;
+                    result[flag] = tuple1s2[i];
+                }
+                return result;
+            }
+        });
 
-
-
-
+           results2.foreach(stringTuple2 -> {
+             System.out.println(stringTuple2._1()+"   val: "+ stringTuple2._2().length);
+           });
     }
 }

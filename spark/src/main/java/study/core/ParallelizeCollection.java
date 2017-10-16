@@ -20,12 +20,12 @@ public class ParallelizeCollection {
 		// 创建SparkConf
 		SparkConf conf = new SparkConf()
 				.setAppName("ParallelizeCollection")
-				.setMaster("local");  
+				.setMaster("local");
 		
 		// 创建JavaSparkContext
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		
-		// 要通过并行化集合的方式创建RDD，那么就调用SparkContext以及其子类，的parallelize()方法
+		// 要通过并行化集合的方式创建RDD，那么就调用 SparkContext 以及其子类，的parallelize()方法
 		List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 		JavaRDD<Integer> numberRDD = sc.parallelize(numbers);
 		
