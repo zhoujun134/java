@@ -21,7 +21,6 @@ public class WordCount {
 		//配置作业名
 		@SuppressWarnings("deprecation") Job job = new Job(conf,"wordcount");
 		//配置作业的各个类
-		job.setJar("/home/hadoop/workspace/WordCount.jar");
 		job.setJarByClass(WordCount.class);
 		job.setMapperClass(TokenizerMapper.class);
 		job.setCombinerClass(IntSumReducer.class);
@@ -30,8 +29,8 @@ public class WordCount {
 		job.setOutputValueClass(IntWritable.class);
 		FileInputFormat.setMinInputSplitSize(job, 33554432l);
 		FileInputFormat.setMaxInputSplitSize(job, 67108864l);
-		FileInputFormat.addInputPath(job, new Path("hdfs://localhost:9000/DD/input"));
-		FileOutputFormat.setOutputPath(job, new Path("hdfs://localhost:9000/DD/output"));
+		FileInputFormat.addInputPath(job, new Path("hdfs://zhoujun:9000/test/hly-temp-10pctl.txt"));
+		FileOutputFormat.setOutputPath(job, new Path("hdfs://zhoujun:9000/output"));
 
 		System.out.println("运行结束！ ");
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
@@ -49,6 +48,7 @@ class TokenizerMapper
 	
 	public void map(Object key, Text value, Context context ) throws IOException,InterruptedException{
 		StringTokenizer itr = new StringTokenizer(value.toString());//对输入的行切词
+		System.out.println("info: " + itr.toString());
 		while(itr.hasMoreTokens()){
 			word.set(itr.nextToken());//切下的单词存入word
 			context.write(word, one);

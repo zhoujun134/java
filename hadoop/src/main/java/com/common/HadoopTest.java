@@ -32,13 +32,14 @@ public class HadoopTest extends Configured implements Tool {
         protected void map(LongWritable key,Text value,Mapper<LongWritable, Text, Text, LongWritable>.Context context)
                 throws IOException,InterruptedException{
             System.out.println("line pos:" + key.toString());
-            String line = value.toString();
-            StringTokenizer tokenizer = new StringTokenizer(line);
-            while (tokenizer.hasMoreElements()) {
-                count ++;
-                word.set(tokenizer.nextToken());
-                context.write(word, one);
-            }
+//            String line = value.toString();
+//            StringTokenizer tokenizer = new StringTokenizer(line);
+//            while (tokenizer.hasMoreElements()) {
+//                System.out.println(tokenizer.toString());
+//                count ++;
+//                word.set(tokenizer.nextToken());
+//                context.write(word, one);
+//            }
         }
     }
 
@@ -63,25 +64,25 @@ public class HadoopTest extends Configured implements Tool {
         //读取classpath下的xxx-site.xml 配置文件，并解析其内容，封装到conf对象中  
         conf = new Configuration();
         //也可以在代码中对conf中的配置信息进行手动设置，会覆盖掉配置文件中的读取的值  
-        conf.set("fs.defaultFS", "hdfs://192.168.27.132:9000/");
+        conf.set("fs.defaultFS", "hdfs://zhoujun:9000/");
         //根据配置信息，去获取一个具体文件系统的客户端操作实例对象  
-        fs = FileSystem.get(new URI("hdfs://192.168.27.132:9000/"),conf,"zhoujun");
+        fs = FileSystem.get(new URI("hdfs://zhoujun:9000/"),conf,"test");
     }
 
     public int run(String[] args) throws Exception {
-        Job job = Job.getInstance(getConf(),"WordCount");
+        Job job = Job.getInstance(getConf(),"test");
         job.setJarByClass(HadoopTest.class);
         job.setMapperClass(CountMapper.class);
         job.setReducerClass(CountReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(LongWritable.class);
-        Path in = new Path("hdfs://192.168.27.132:9000/testSpark/testIn.txt");
+        Path in = new Path("hdfs://zhoujun:9000/test");
         if(fs.exists(in)){
             FileInputFormat.addInputPath(job, in);
         }else{
             System.out.println("输入文件不存在！");
         }
-        Path os = new Path("hdfs://192.168.27.132:9000/Wordout");
+        Path os = new Path("hdfs://zhoujun:9000/hbase-test/out");
         int flage = 0;
         if(fs.exists(os)){
             System.out.println("输出文件已经存在！重新新建路径！");
