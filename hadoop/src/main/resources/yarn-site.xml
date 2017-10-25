@@ -18,5 +18,9 @@
         <property>
              <name>yarn.nodemanager.aux-services</name>
              <value>mapreduce_shuffle</value>
-            </property>
+        </property>
+        <property>
+             <name>yarn.scheduler.maximum-allocation-mb</name>
+             <value>2024</value>
+        </property>
 </configuration>

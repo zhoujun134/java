@@ -28,7 +28,12 @@ public class ReduceByKeyTest {
             this.add("http://www.sina.com/help.html");
         }});
         HashMap<String, Integer> dateResult = new HashMap<>();
-        JavaPairRDD<String, Integer> pairRDD = rdd.mapToPair(s -> new Tuple2<>(s, 1));
+        JavaPairRDD<String, Integer> pairRDD = rdd.mapToPair(new PairFunction<String, String, Integer>() {
+            @Override
+            public Tuple2<String, Integer> call(String s) throws Exception {
+                return new Tuple2<>(s,1);
+            }
+        });
         JavaPairRDD<String, Integer> pairRDD2 = pairRDD.reduceByKey(new Partitioner() {
             @Override
             public int getPartition(Object key) {

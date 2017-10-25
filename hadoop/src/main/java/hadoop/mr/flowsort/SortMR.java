@@ -2,6 +2,7 @@ package hadoop.mr.flowsort;
 
 import java.io.IOException;
 
+import hadoop.mr.flowsum.FlowBean;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -14,7 +15,6 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-import cn.itcast.hadoop.mr.flowsum.FlowBean;
 
 public class SortMR {
 	

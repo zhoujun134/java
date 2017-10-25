@@ -32,14 +32,8 @@ public class ImportFromFile {
     //日志信息
     private static final Log LOG = LogFactory.getLog(ImportFromFile.class);
 
-    public static final String NAME = "ImportFromFile"; // co ImportFromFile-1-Name Define a job name for later use.
+    public static final String NAME = "ImportFromFile";
     public enum Counters { LINES }
-
-    // ^^ ImportFromFile
-    /**
-     * Implements the <code>Mapper</code> that takes the lines from the input
-     * and outputs <code>Put</code> instances.
-     */
     static class ImportMapper
             extends Mapper<LongWritable, Text, ImmutableBytesWritable, Mutation> {
 
