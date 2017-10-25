@@ -1,6 +1,4 @@
 package com.filter.row;
-
-import com.utils.HBaseUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;

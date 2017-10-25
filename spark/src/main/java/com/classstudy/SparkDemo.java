@@ -13,6 +13,7 @@ import scala.math.Ordering;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  * Created by zhoujun on 2017/9/18.
@@ -116,18 +117,19 @@ public class SparkDemo {
                 return new Tuple2<Integer, Integer>(integer, 1);
             }
         });
-        System.out.println("分区数： " + pairRDD.getNumPartitions());
-        pairRDD.reduceByKey(new HashPartitioner(2), new Function2<Integer, Integer, Integer>() {
-            @Override
-            public Integer call(Integer v1, Integer v2) throws Exception {
-                return v1+v2;
-            }
-        }).foreach(new VoidFunction<Tuple2<Integer, Integer>>() {
+        JavaPairRDD<Integer, Integer> result = pairRDD.coalesce(4,true);
+        System.out.println("分区数1： " + pairRDD.getNumPartitions());
+        System.out.println("debug： " + result.toDebugString());
+        System.out.println("分区数2： " + result.getNumPartitions());
+        result.foreach(new VoidFunction<Tuple2<Integer, Integer>>() {
             @Override
             public void call(Tuple2<Integer, Integer> integerIntegerTuple2) throws Exception {
                 System.out.println(integerIntegerTuple2);
             }
         });
 
+        Scanner scanner = new Scanner(System.in);
+        scanner.next();
+        scanner.close();
     }
 }
