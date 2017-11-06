@@ -64,7 +64,7 @@ public class ActionOperation {
 	}
 	
 	private static void collect() {
-		// 创建SparkConf和JavaSparkContext
+		// 创建 SparkConf 和 JavaSparkContext
 		SparkConf conf = new SparkConf()
 				.setAppName("collect")
 				.setMaster("local");  
@@ -76,18 +76,13 @@ public class ActionOperation {
 		
 		// 使用map操作将集合中所有数字乘以2
 		JavaRDD<Integer> doubleNumbers = numbers.map(
-				
 				new Function<Integer, Integer>() {
-
 					private static final long serialVersionUID = 1L;
-		
 					@Override
 					public Integer call(Integer v1) throws Exception {
 						return v1 * 2;
 					}
-					
 				});
-		
 		// 不用foreach action操作，在远程集群上遍历rdd中的元素
 		// 而使用collect操作，将分布在远程集群上的doubleNumbers RDD的数据拉取到本地
 		// 这种方式，一般不建议使用，因为如果rdd中的数据量比较大的话，比如超过1万条

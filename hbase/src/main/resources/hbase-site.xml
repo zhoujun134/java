@@ -23,7 +23,7 @@
 <configuration>
 <property>
       <name>hbase.rootdir</name>
-      <value>hdfs://zhoujun:9000/hbase</value>
+      <value>hdfs://192.168.23.135:9000/hbase</value>
    </property>
    <property>
       <name>hbase.cluster.distributed</name>
@@ -31,11 +31,11 @@
    </property>
    <property>
         <name>hbase.master</name>    
-        <value>zhoujun</value>
+        <value>192.168.23.135</value>
     </property> 
     <property>
       <name>hbase.zookeeper.quorum</name>
-      <value>zhoujun</value>
+      <value>192.168.23.135</value>
    </property>
    <property>
       <name>hbase.tmp.dir</name>
