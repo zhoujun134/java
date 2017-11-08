@@ -30,50 +30,35 @@ public class FlumePollWordCount {
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));
 		
 		JavaReceiverInputDStream<SparkFlumeEvent> lines =
-				FlumeUtils.createPollingStream(jssc, "192.168.0.103", 8888);
-		
+				FlumeUtils.createPollingStream(jssc, "localhost", 8888);
 		JavaDStream<String> words = lines.flatMap(
-				
 				new FlatMapFunction<SparkFlumeEvent, String>() {
-
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public Iterator<String> call(SparkFlumeEvent event) throws Exception {
 						String line = new String(event.event().getBody().array());  
 						return Arrays.asList(line.split(" ")).iterator();
 					}
-					
 				});
-		
 		JavaPairDStream<String, Integer> pairs = words.mapToPair(
-				
 				new PairFunction<String, String, Integer>() {
-
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public Tuple2<String, Integer> call(String word) throws Exception {
 						return new Tuple2<String, Integer>(word, 1);
 					}
-					
 				});
 		
 		JavaPairDStream<String, Integer> wordCounts = pairs.reduceByKey(
-				
 				new Function2<Integer, Integer, Integer>() {
-
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public Integer call(Integer v1, Integer v2) throws Exception {
 						return v1 + v2;
 					}
-					
 				});
 		
 		wordCounts.print();
-		
 		jssc.start();
 		try {
 			jssc.awaitTermination();

@@ -41,38 +41,25 @@ public class Repartition {
 		JavaRDD<String> staffRDD = sc.parallelize(staffList, 3);
 		
 		JavaRDD<String> staffRDD2 = staffRDD.mapPartitionsWithIndex(
-				
 				new Function2<Integer, Iterator<String>, Iterator<String>>() {
-
 					private static final long serialVersionUID = 1L;
-		
 					@Override
 					public Iterator<String> call(Integer index, Iterator<String> iterator)
 							throws Exception {
 						List<String> list = new ArrayList<String>();
-						
 						while(iterator.hasNext()) {
 							String staff = iterator.next();
-							list.add("部门[" + (index + 1) + "], " + staff);
+							list.add("部门 [" + (index + 1) + "], " + staff);
 						}
-						
 						return list.iterator();
 					}
-					
 				}, true);
-		
 		for(String staffInfo : staffRDD2.collect()) {
-			System.out.println(staffInfo);  
-		}
-		
+			System.out.println(staffInfo);
 		JavaRDD<String> staffRDD3 = staffRDD2.repartition(6);
-		
 		JavaRDD<String> staffRDD4 = staffRDD3.mapPartitionsWithIndex(
-				
 				new Function2<Integer, Iterator<String>, Iterator<String>>() {
-
 					private static final long serialVersionUID = 1L;
-		
 					@Override
 					public Iterator<String> call(Integer index, Iterator<String> iterator)
 							throws Exception {
@@ -80,19 +67,14 @@ public class Repartition {
 						
 						while(iterator.hasNext()) {
 							String staff = iterator.next();
-							list.add("部门[" + (index + 1) + "], " + staff);
+							list.add(" 部门[" + (index + 1) + "], " + staff);
 						}
-						
 						return list.iterator();
 					}
-					
 				}, true);
-		
-		for(String staffInfo : staffRDD4.collect()) {
-			System.out.println(staffInfo);  
-		}
-		
+		for(String staffInfo2 : staffRDD4.collect()) System.out.println(staffInfo2);
 		sc.close();
+		}
 	}
 	
 }

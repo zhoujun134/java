@@ -26,27 +26,20 @@ public class AggregateByKey {
 				3); 
 		
 		JavaRDD<String> words = lines.flatMap(new FlatMapFunction<String, String>() {
-			
 			private static final long serialVersionUID = 1L;
-			
 			@Override
 			public Iterator<String> call(String line) throws Exception {
 				return Arrays.asList(line.split(" ")).iterator();
 			}
-			
 		});
 		
 		JavaPairRDD<String, Integer> pairs = words.mapToPair(
-				
 				new PairFunction<String, String, Integer>() {
-
 					private static final long serialVersionUID = 1L;
-					
 					@Override
 					public Tuple2<String, Integer> call(String word) throws Exception {
 						return new Tuple2<String, Integer>(word, 1);
 					}
-					
 				});
 		
 		// aggregateByKey，分为三个参数
@@ -60,30 +53,23 @@ public class AggregateByKey {
 		// 第三个是个函数，Combiner Function，如何进行shuffle reduce-side的全局聚合
 		
 		JavaPairRDD<String, Integer> wordCounts = pairs.aggregateByKey(
-				0, 
-				
+				0,
 				new Function2<Integer, Integer, Integer>() {
-
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public Integer call(Integer v1, Integer v2)
 							throws Exception {
 						return v1 + v2;
 					}
-					
 				}, 
 				
 				new Function2<Integer, Integer, Integer>() {
-
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public Integer call(Integer v1, Integer v2)
 							throws Exception {
 						return v1 + v2;
 					}
-					
 				});
 		
 		List<Tuple2<String, Integer>> wordCountList = wordCounts.collect();

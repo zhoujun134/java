@@ -26,15 +26,16 @@ public class PartitionDemo {
     	conf.setAppName("WordCounter");
     	JavaSparkContext ctx = new JavaSparkContext(conf);
 
+    	ctx.setCheckpointDir("E:\\git\\java\\spark\\src\\main\\resources");
     	List<String> lines = new ArrayList<String>();
     	lines.add("Hello How are you");
     	lines.add("No Fine thanks a lot ddddddddddd");
     	lines.add("Good are ok");
     	lines.add("Good is ok");
     	JavaRDD<String> rdd1 = ctx.parallelize(lines, 2);
-        System.out.println("rdd1 partitioner:" + rdd1.partitioner());
-        System.out.println("rdd1: " + rdd1.getNumPartitions());
-        System.out.println("rdd1 :" + rdd1.glom().collect());
+//        System.out.println("rdd1 partitioner:" + rdd1.partitioner());
+//        System.out.println("rdd1: " + rdd1.getNumPartitions());
+//        System.out.println("rdd1 :" + rdd1.glom().collect());
         
         JavaRDD<String> words = rdd1.flatMap(new FlatMapFunction<String, String>() {
             @Override
@@ -42,9 +43,14 @@ public class PartitionDemo {
                 return Arrays.asList(s.split(" ")).iterator();
             }
         });
-        System.out.println("words partitioner:" + words.partitioner());
-        System.out.println("words: " + words.getNumPartitions());
-        System.out.println("words :" + words.glom().collect());
+
+        System.out.println("before: " + words.toDebugString());
+        words.checkpoint();
+		System.out.println("after1: " + words.toDebugString());
+
+//        System.out.println("words partitioner:" + words.partitioner());
+//        System.out.println("words: " + words.getNumPartitions());
+//        System.out.println("words :" + words.glom().collect());
 
       JavaPairRDD<String, Integer> mapRdd = words.mapToPair(new PairFunction<String, String, Integer>() {  
 	      @Override
@@ -62,7 +68,6 @@ public class PartitionDemo {
 			public int numPartitions() {
 				return 4;
 			}
-
 			@Override
 			public int getPartition(Object arg0) {
 				int hashCode = arg0.hashCode();
@@ -74,9 +79,13 @@ public class PartitionDemo {
 				return index;
 			}
 	   });
-    System.out.println("mapRdd2 partitioner:" + mapRdd2.partitioner());
-    System.out.println("mapRdd2 :" + mapRdd2.getNumPartitions());
-    System.out.println("mapRdd2 :" + mapRdd2.glom().collect());
+      System.out.println("after: " + mapRdd2.toDebugString());
+
+
+
+//    System.out.println("mapRdd2 partitioner:" + mapRdd2.partitioner());
+//    System.out.println("mapRdd2 :" + mapRdd2.getNumPartitions());
+//    System.out.println("mapRdd2 :" + mapRdd2.glom().collect());
 /*      
       mapRdd.reduceByKey(
               new Partitioner() {    

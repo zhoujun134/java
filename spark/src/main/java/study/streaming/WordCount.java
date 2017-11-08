@@ -26,7 +26,7 @@ public class WordCount {
 		// local后面必须跟一个方括号，里面填写一个数字，数字代表了，我们用几个线程来执行我们的
 		// Spark Streaming程序
 		SparkConf conf = new SparkConf()
-				.setMaster("sparkMaster")
+				.setMaster("local[2]")
 				.setAppName("WordCount");  
 		
 		// 创建JavaStreamingContext对象
@@ -34,14 +34,13 @@ public class WordCount {
 		// 该对象除了接收SparkConf对象对象之外
 		// 还必须接收一个batch interval参数，就是说，每收集多长时间的数据，划分为一个batch，进行处理
 		// 这里设置一秒
-		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
+		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(3000));
 	
 		// 首先，创建输入DStream，代表了一个从数据源（比如kafka、socket）来的持续不断的实时数据流
 		// 调用JavaStreamingContext的socketTextStream()方法，可以创建一个数据源为Socket网络端口的
 		// 数据流，JavaReceiverInputStream，代表了一个输入的DStream
 		// socketTextStream()方法接收两个基本参数，第一个是监听哪个主机上的端口，第二个是监听哪个端口
-		JavaReceiverInputDStream<String> lines = jssc.socketTextStream("localhost", 9999);
-		
+		JavaReceiverInputDStream<String> lines = jssc.socketTextStream("localhost", 8888);
 		// 到这里为止，你可以理解为JavaReceiverInputDStream中的，每隔一秒，会有一个RDD，其中封装了
 		// 这一秒发送过来的数据
 		// RDD的元素类型为String，即一行一行的文本
@@ -84,14 +83,11 @@ public class WordCount {
 		JavaPairDStream<String, Integer> wordCounts = pairs.reduceByKey(
 				
 				new Function2<Integer, Integer, Integer>() {
-			
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public Integer call(Integer v1, Integer v2) throws Exception {
 						return v1 + v2;
 					}
-					
 				});
 		
 		// 到此为止，我们就实现了实时的wordcount程序了

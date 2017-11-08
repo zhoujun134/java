@@ -34,29 +34,22 @@ public class BroadcastVariable {
 		
 		// 让集合中的每个数字，都乘以外部定义的那个factor
 		JavaRDD<Integer> multipleNumbers = numbers.map(new Function<Integer, Integer>() {
-
 			private static final long serialVersionUID = 1L;
-			
 			@Override
 			public Integer call(Integer v1) throws Exception {
 				// 使用共享变量时，调用其value()方法，即可获取其内部封装的值
 				int factor = factorBroadcast.value();
 				return v1 * factor;
 			}
-			
 		});
 		
 		multipleNumbers.foreach(new VoidFunction<Integer>() {
-			
 			private static final long serialVersionUID = 1L;
-			
 			@Override
 			public void call(Integer t) throws Exception {
 				System.out.println(t);  
 			}
-			
 		});
-		
 		sc.close();
 	}
 	

@@ -19,7 +19,6 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public class ActionOperation {
-	
 	public static void main(String[] args) {
 		// reduce();
 		// collect();

@@ -1,4 +1,4 @@
-package com.com.trade;
+package com.classstudy.classtest;
 
 import java.io.Serializable;
 

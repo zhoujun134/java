@@ -30,18 +30,15 @@ public class WindowHotWord {
 		// 说明一下，这里的搜索日志的格式
 		// leo hello
 		// tom world
-		JavaReceiverInputDStream<String> searchLogsDStream = jssc.socketTextStream("spark1", 9999);
+		JavaReceiverInputDStream<String> searchLogsDStream = jssc.socketTextStream("192.168.23.135", 9999);
 		
 		// 将搜索日志给转换成，只有一个搜索词，即可
 		JavaDStream<String> searchWordsDStream = searchLogsDStream.map(new Function<String, String>() {
-
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public String call(String searchLog) throws Exception {
 				return searchLog.split(" ")[1];
 			}
-			
 		});
 		
 		// 将搜索词映射为(searchWord, 1)的tuple格式

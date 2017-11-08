@@ -48,7 +48,7 @@ public class Distinct {
 			}
 			
 		});
-		
+
 		JavaRDD<String> distinctUseridsRDD = useridsRDD.distinct();
 		int uv = distinctUseridsRDD.collect().size();
 		System.out.println("uv: " + uv);  

@@ -10,6 +10,7 @@ import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.api.java.function.VoidFunction;
 import scala.Tuple2;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -29,7 +30,7 @@ public class WordCountLocal {
 		// 但是如果设置为local则代表，在本地运行
 		SparkConf conf = new SparkConf()
 				.setAppName("WordCountLocal")
-				.setMaster("local");  
+				.setMaster("local[2]");
 		
 		// 第二步：创建JavaSparkContext对象
 		// 在Spark中，SparkContext是Spark所有功能的一个入口，你无论是用java、scala，甚至是python编写
@@ -51,7 +52,7 @@ public class WordCountLocal {
 		// 在Java中，创建的普通RDD，都叫做JavaRDD
 		// 在这里呢，RDD中，有元素这种概念，如果是hdfs或者本地文件呢，创建的RDD，每一个元素就相当于
 		// 是文件里的一行
-		JavaRDD<String> lines = sc.textFile("C://Users//Administrator//Desktop//spark.txt");
+		JavaRDD<String> lines = sc.textFile("E:\\git\\java\\spark\\src\\main\\resources\\spark.txt");
 	
 		// 第四步：对初始RDD进行transformation操作，也就是一些计算操作
 		// 通常操作会通过创建function，并配合RDD的map、flatMap等算子来执行
@@ -62,12 +63,17 @@ public class WordCountLocal {
 		// FlatMapFunction，有两个泛型参数，分别代表了输入和输出类型
 		// 我们这里呢，输入肯定是String，因为是一行一行的文本，输出，其实也是String，因为是每一行的文本
 		// 这里先简要介绍flatMap算子的作用，其实就是，将RDD的一个元素，给拆分成一个或多个元素
+//		final int[] count = {0};
+		final Counter c = new Counter();
+		lines.repartition(3);
 		JavaRDD<String> words = lines.flatMap(new FlatMapFunction<String, String>() {
-			
 			private static final long serialVersionUID = 1L;
-			
 			@Override
 			public Iterator<String> call(String line) throws Exception {
+				if(line.equals("") || line.length()==0 ) c.count++;
+				System.out.println("thread id : " + Thread.currentThread().getId());
+//	        	if(line.equals("") || line.length()==0 ) count[0]++;
+
 				return Arrays.asList(line.split(" ")).iterator();
 			}
 			
@@ -81,16 +87,12 @@ public class WordCountLocal {
 			// 第二个和第三个泛型参数，代表的输出的Tuple2的第一个值和第二个值的类型
 		// JavaPairRDD的两个泛型参数，分别代表了tuple元素的第一个值和第二个值的类型
 		JavaPairRDD<String, Integer> pairs = words.mapToPair(
-				
 				new PairFunction<String, String, Integer>() {
-
 					private static final long serialVersionUID = 1L;
-		
 					@Override
 					public Tuple2<String, Integer> call(String word) throws Exception {
 						return new Tuple2<String, Integer>(word, 1);
 					}
-					
 				});
 		
 		// 接着，需要以单词作为key，统计每个单词出现的次数
@@ -101,16 +103,12 @@ public class WordCountLocal {
 		// 最后返回的JavaPairRDD中的元素，也是tuple，但是第一个值就是每个key，第二个值就是key的value
 		// reduce之后的结果，相当于就是每个单词出现的次数
 		JavaPairRDD<String, Integer> wordCounts = pairs.reduceByKey(
-				
 				new Function2<Integer, Integer, Integer>() {
-					
 					private static final long serialVersionUID = 1L;
-		
 					@Override
 					public Integer call(Integer v1, Integer v2) throws Exception {
 						return v1 + v2;
 					}
-					
 				});
 		
 		// 到这里为止，我们通过几个Spark算子操作，已经统计出了单词的次数
@@ -118,17 +116,19 @@ public class WordCountLocal {
 		// 一个Spark应用中，光是有transformation操作，是不行的，是不会执行的，必须要有一种叫做action
 		// 接着，最后，可以使用一种叫做action操作的，比如说，foreach，来触发程序的执行
 		wordCounts.foreach(new VoidFunction<Tuple2<String,Integer>>() {
-			
 			private static final long serialVersionUID = 1L;
-			
 			@Override
 			public void call(Tuple2<String, Integer> wordCount) throws Exception {
 				System.out.println(wordCount._1 + " appeared " + wordCount._2 + " times.");    
 			}
-			
 		});
-		
+		System.out.println("count: " + c.count);
 		sc.close();
+//		System.out.println("count: " + count[0]);
 	}
 	
+}
+
+class Counter implements Serializable{
+	public static int count = 0;
 }

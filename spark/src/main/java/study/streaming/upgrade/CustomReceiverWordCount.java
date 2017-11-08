@@ -23,52 +23,35 @@ public class CustomReceiverWordCount {
 	public static void main(String[] args) throws Exception {
 		SparkConf conf = new SparkConf()
 				.setMaster("local[2]")
-				.setAppName("WordCount");  
-
+				.setAppName("WordCount");
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
-	
-		JavaDStream<String> lines = jssc.receiverStream(new JavaCustomReceiver("localhost", 9999));
-		
+		JavaDStream<String> lines = jssc.receiverStream(new JavaCustomReceiver("192.168.23.135", 9999));
 		JavaDStream<String> words = lines.flatMap(new FlatMapFunction<String, String>() {
-
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public Iterator<String> call(String line) throws Exception {
 				return Arrays.asList(line.split(" ")).iterator();
 			}
-			
 		});
-		
 		JavaPairDStream<String, Integer> pairs = words.mapToPair(
-				
 				new PairFunction<String, String, Integer>() {
-
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public Tuple2<String, Integer> call(String word)
 							throws Exception {
 						return new Tuple2<String, Integer>(word, 1);
 					}
-					
 				});
-
 		JavaPairDStream<String, Integer> wordCounts = pairs.reduceByKey(
-				
 				new Function2<Integer, Integer, Integer>() {
-			
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public Integer call(Integer v1, Integer v2) throws Exception {
 						return v1 + v2;
 					}
-					
 				});
 		
 		wordCounts.print();
-		
 		jssc.start();
 		jssc.awaitTermination();
 		jssc.close();

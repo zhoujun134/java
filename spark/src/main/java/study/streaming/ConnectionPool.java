@@ -13,7 +13,6 @@ public class ConnectionPool {
 
 	// 静态的Connection队列
 	private static LinkedList<Connection> connectionQueue;
-	
 	/**
 	 * 加载驱动
 	 */
@@ -24,7 +23,6 @@ public class ConnectionPool {
 			e.printStackTrace();
 		}  
 	}
-	
 	/**
 	 * 获取连接，多线程访问并发控制
 	 * @return
@@ -35,7 +33,7 @@ public class ConnectionPool {
 				connectionQueue = new LinkedList<Connection>();
 				for(int i = 0; i < 10; i++) {
 					Connection conn = DriverManager.getConnection(
-							"jdbc:mysql://spark1:3306/testdb", 
+							"jdbc:mysql://localhost:3306/testdb",
 							"", 
 							"");
 					connectionQueue.push(conn);  

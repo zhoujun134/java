@@ -30,7 +30,7 @@ public class FlumePushWordCount {
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));
 		
 		JavaReceiverInputDStream<SparkFlumeEvent> lines =
-				FlumeUtils.createStream(jssc, "192.168.0.103", 8888);
+				FlumeUtils.createStream(jssc, "localhost", 8888);
 		
 		JavaDStream<String> words = lines.flatMap(
 				

@@ -43,13 +43,10 @@ public class TransformationOperation {
 				.setMaster("local");
 		// 创建JavaSparkContext
 		JavaSparkContext sc = new JavaSparkContext(conf);
-	
 		// 构造集合
 		List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
-		
 		// 并行化集合，创建初始RDD
 		JavaRDD<Integer> numberRDD = sc.parallelize(numbers);
-		
 		// 使用map算子，将集合中的每个元素都乘以2
 		// map算子，是对任何类型的RDD，都可以调用的
 		// 在java中，map算子接收的参数是Function对象
@@ -58,30 +55,23 @@ public class TransformationOperation {
 		// 在call()方法内部，就可以对原始RDD中的每一个元素进行各种处理和计算，并返回一个新的元素
 		// 所有新的元素就会组成一个新的RDD
 		JavaRDD<Integer> multipleNumberRDD = numberRDD.map(
-				
 				new Function<Integer, Integer>() {
-
 					private static final long serialVersionUID = 1L;
-					
 					// 传入call()方法的，就是1,2,3,4,5
 					// 返回的就是2,4,6,8,10
 					@Override
 					public Integer call(Integer v1) throws Exception {
 						return v1 * 2;
 					}
-					
 				});
 		
 		// 打印新的RDD
 		multipleNumberRDD.foreach(new VoidFunction<Integer>() {
-			
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public void call(Integer t) throws Exception {
 				System.out.println(t);  
 			}
-			
 		});
 		
 		// 关闭JavaSparkContext
@@ -98,13 +88,10 @@ public class TransformationOperation {
 				.setMaster("local");
 		// 创建JavaSparkContext
 		JavaSparkContext sc = new JavaSparkContext(conf);
-		
 		// 模拟集合
 		List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-		
 		// 并行化集合，创建初始RDD
 		JavaRDD<Integer> numberRDD = sc.parallelize(numbers);
-		
 		// 对初始RDD执行filter算子，过滤出其中的偶数
 		// filter算子，传入的也是Function，其他的使用注意点，实际上和map是一样的
 		// 但是，唯一的不同，就是call()方法的返回类型是Boolean
@@ -112,11 +99,8 @@ public class TransformationOperation {
 		// 来判断这个元素是否是你想要的
 		// 如果你想在新的RDD中保留这个元素，那么就返回true；否则，不想保留这个元素，返回false
 		JavaRDD<Integer> evenNumberRDD = numberRDD.filter(
-				
 				new Function<Integer, Boolean>() {
-
 					private static final long serialVersionUID = 1L;
-					
 					// 在这里，1到10，都会传入进来
 					// 但是根据我们的逻辑，只有2,4,6,8,10这几个偶数，会返回true
 					// 所以，只有偶数会保留下来，放在新的RDD中
@@ -124,19 +108,15 @@ public class TransformationOperation {
 					public Boolean call(Integer v1) throws Exception {
 						return v1 % 2 == 0;
 					}
-					
 				});
 		
 		// 打印新的RDD
 		evenNumberRDD.foreach(new VoidFunction<Integer>() {
-
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public void call(Integer t) throws Exception {
 				System.out.println(t);
 			}
-			
 		});
 		
 		// 关闭JavaSparkContext
@@ -153,13 +133,10 @@ public class TransformationOperation {
 				.setMaster("local");  
 		// 创建JavaSparkContext
 		JavaSparkContext sc = new JavaSparkContext(conf);
-		
 		// 构造集合
-		List<String> lineList = Arrays.asList("hello you", "hello me", "hello world");  
-		
+		List<String> lineList = Arrays.asList("hello you", "hello me", "hello world");
 		// 并行化集合，创建RDD
 		JavaRDD<String> lines = sc.parallelize(lineList);
-		
 		// 对RDD执行flatMap算子，将每一行文本，拆分为多个单词
 		// flatMap算子，在java中，接收的参数是FlatMapFunction
 		// 我们需要自己定义FlatMapFunction的第二个泛型类型，即，代表了返回的新元素的类型
@@ -168,29 +145,23 @@ public class TransformationOperation {
 		// 多个元素，即封装在Iterable集合中，可以使用ArrayList等集合
 		// 新的RDD中，即封装了所有的新元素；也就是说，新的RDD的大小一定是 >= 原始RDD的大小
 		JavaRDD<String> words = lines.flatMap(new FlatMapFunction<String, String>() {
-
 			private static final long serialVersionUID = 1L;
-			
 			// 在这里会，比如，传入第一行，hello you
 			// 返回的是一个Iterable<String>(hello, you)
 			@Override
 			public Iterator<String> call(String t) throws Exception {
 				return Arrays.asList(t.split(" ")).iterator();
 			}
-			
 		});
 		
 		// 打印新的RDD
 		words.foreach(new VoidFunction<String>() {
-
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public void call(String t) throws Exception {
 				System.out.println(t);
 			}
 		});
-		
 		// 关闭JavaSparkContext
 		sc.close();
 	}

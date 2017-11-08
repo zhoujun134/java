@@ -59,8 +59,6 @@ public class UnionTest {
                 return new Tuple2<>(s,"1");
             }
         });
-
-
         JavaPairRDD<String, String> pairRDD2 = javaPairRDD2.partitionBy(new Partitioner() {
             @Override
             public int getPartition(Object key) {
@@ -81,7 +79,6 @@ public class UnionTest {
         System.out.println("rdd1 of partitionNum: " + pairRDD1.getNumPartitions());
         System.out.println("rdd2 of partitionNum: " + pairRDD2.glom().collect());
         System.out.println("rdd3 of partitionNum: " + pairRDD3.glom().collect());
-
 
 
 

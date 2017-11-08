@@ -12,12 +12,10 @@ import java.io.Serializable;
 public class SecondarySortKey implements Ordered<SecondarySortKey>, Serializable {
 
 	private static final long serialVersionUID = -2366006422945129991L;
-	
 	// 首先在自定义key里面，定义需要进行排序的列
 	private int first;
 	private int second;
-	
-	public SecondarySortKey(int first, int second) {
+	SecondarySortKey(int first, int second) {
 		this.first = first;
 		this.second = second;
 	}

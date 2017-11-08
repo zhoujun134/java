@@ -25,15 +25,10 @@ public class SecondarySort {
 				.setAppName("SecondarySort") 
 				.setMaster("local");
 		JavaSparkContext sc = new JavaSparkContext(conf);
-	
 		JavaRDD<String> lines = sc.textFile("C://Users//Administrator//Desktop//sort.txt");
-		
 		JavaPairRDD<SecondarySortKey, String> pairs = lines.mapToPair(
-				
 				new PairFunction<String, SecondarySortKey, String>() {
-
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public Tuple2<SecondarySortKey, String> call(String line) throws Exception {
 						String[] lineSplited = line.split(" ");  
@@ -42,33 +37,24 @@ public class SecondarySort {
 								Integer.valueOf(lineSplited[1]));  
 						return new Tuple2<SecondarySortKey, String>(key, line);
 					}
-					
 				});
 		
 		JavaPairRDD<SecondarySortKey, String> sortedPairs = pairs.sortByKey();
-		
 		JavaRDD<String> sortedLines = sortedPairs.map(
-				
 				new Function<Tuple2<SecondarySortKey,String>, String>() {
-
 					private static final long serialVersionUID = 1L;
-
 					@Override
 					public String call(Tuple2<SecondarySortKey, String> v1) throws Exception {
 						return v1._2;
 					}
-					
 				});
 		
 		sortedLines.foreach(new VoidFunction<String>() {
-
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public void call(String t) throws Exception {
 				System.out.println(t);  
 			}
-			
 		});
 		
 		sc.close();
