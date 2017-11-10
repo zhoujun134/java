@@ -23,7 +23,7 @@
 <configuration>
 <property>
       <name>hbase.rootdir</name>
-      <value>hdfs://192.168.23.135:9000/hbase</value>
+      <value>hdfs://192.168.44.1:9000/hbase</value>
    </property>
    <property>
       <name>hbase.cluster.distributed</name>
@@ -31,11 +31,11 @@
    </property>
    <property>
         <name>hbase.master</name>    
-        <value>192.168.23.135</value>
+        <value>192.168.44.1</value>
     </property> 
     <property>
       <name>hbase.zookeeper.quorum</name>
-      <value>192.168.23.135</value>
+      <value>192.168.44.1</value>
    </property>
    <property>
       <name>hbase.tmp.dir</name>
