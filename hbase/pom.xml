@@ -7,7 +7,11 @@
     <groupId>com.zhoujun134</groupId>
     <artifactId>hbase</artifactId>
     <version>1.0-SNAPSHOT</version>
-
+    <configuration>
+        <fork>true</fork>
+        <meminitial>512m</meminitial>
+        <maxmem>1048m</maxmem>
+    </configuration>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.apache.hbase/hbase -->
         <dependency>
